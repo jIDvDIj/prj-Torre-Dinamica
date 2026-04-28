@@ -1,32 +1,33 @@
-function getVizinhos(tabuleiro, casaAtual) {
-  const vizinhos = [];
+function getMovimentos(tabuleiro, casaAtual) {
+  const movimentos = [];
 
   const direcoes = [
-    [-1, 0], // cima
-    [1, 0],  // baixo
-    [0, -1], // esquerda
-    [0, 1]   // direita
+    { nome: "cima", di: -1, dj: 0 },
+    { nome: "baixo", di: 1, dj: 0 },
+    { nome: "esquerda", di: 0, dj: -1 },
+    { nome: "direita", di: 0, dj: 1 }
   ];
 
-  for (const [di, dj] of direcoes) {
-    const novaLinha = casaAtual.linha + di;
-    const novaColuna = casaAtual.coluna + dj;
+  for (const dir of direcoes) {
+    const novaLinha = casaAtual.linha + dir.di;
+    const novaColuna = casaAtual.coluna + dir.dj;
 
-    // Verifica limites do tabuleiro
     if (
       novaLinha >= 0 && novaLinha < tabuleiro.length &&
       novaColuna >= 0 && novaColuna < tabuleiro[0].length
     ) {
       const vizinho = tabuleiro[novaLinha][novaColuna];
 
-      // Verifica se não é barreira
       if (vizinho.custo !== Infinity) {
-        vizinhos.push(vizinho);
+        movimentos.push({
+          casa: vizinho,
+          direcao: dir.nome
+        });
       }
     }
   }
 
-  return vizinhos;
+  return movimentos;
 }
 
-module.exports = getVizinhos;
+module.exports = getMovimentos;

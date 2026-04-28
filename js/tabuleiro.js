@@ -131,3 +131,7 @@ function imprimirTabuleiro(tabuleiro, origem, destino) {
 }
 
 
+module.exports = {
+  gerarTabuleiroComCaminho,
+  imprimirTabuleiro
+};

@@ -1,14 +1,27 @@
-const getVizinhos = require("./movimento");
-require('./js/movimento')
-require('./js/tabuleiro')
+const getMovimentos = require("./js/movimento");
+const { gerarTabuleiroComCaminho, imprimirTabuleiro } = require("./js/tabuleiro");
 
+// 1. Gera o cenário
+const resultado = gerarTabuleiroComCaminho();
 
-// depois de gerar o tabuleiro
+const matriz = resultado.matriz;
+const origem = resultado.origem;
+const destino = resultado.destino;
+
+// 2. Imprime o tabuleiro
+imprimirTabuleiro(matriz, origem, destino);
+
+// 3. Define a casa inicial
 const casaInicial = matriz[origem[0]][origem[1]];
 
-const vizinhos = getVizinhos(matriz, casaInicial);
+// 4. Calcula movimentos
+const movimentos = getMovimentos(matriz, casaInicial);
 
-console.log("\nVizinhos da origem:");
-vizinhos.forEach(v => {
-  console.log(`(${v.linha}, ${v.coluna}) - custo: ${v.custo}`);
+// 5. Mostra resultados
+console.log("\nMovimentos possíveis da torre:");
+
+movimentos.forEach(m => {
+  console.log(
+    `${m.direcao} → (${m.casa.linha}, ${m.casa.coluna}) | custo: ${m.casa.custo}`
+  );
 });
