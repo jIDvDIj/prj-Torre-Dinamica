@@ -1,27 +1,11 @@
-const getMovimentos = require("./js/movimento");
 const { gerarTabuleiroComCaminho, imprimirTabuleiro } = require("./js/tabuleiro");
+const { rodarComparacao, imprimirRelatorio } = require("./js/comparar");
 
-// 1. Gera o cenário
-const resultado = gerarTabuleiroComCaminho();
-
-const matriz = resultado.matriz;
-const origem = resultado.origem;
-const destino = resultado.destino;
-
-// 2. Imprime o tabuleiro
+// Exibe um tabuleiro de exemplo
+const { matriz, origem, destino } = gerarTabuleiroComCaminho();
 imprimirTabuleiro(matriz, origem, destino);
+console.log(`Origem: (${origem[0]}, ${origem[1]})  →  Destino: (${destino[0]}, ${destino[1]})`);
 
-// 3. Define a casa inicial
-const casaInicial = matriz[origem[0]][origem[1]];
-
-// 4. Calcula movimentos
-const movimentos = getMovimentos(matriz, casaInicial);
-
-// 5. Mostra resultados
-console.log("\nMovimentos possíveis da torre:");
-
-movimentos.forEach(m => {
-  console.log(
-    `${m.direcao} → (${m.casa.linha}, ${m.casa.coluna}) | custo: ${m.casa.custo}`
-  );
-});
+// Roda a comparação e imprime o relatório
+const resultado = rodarComparacao();
+imprimirRelatorio(resultado);
