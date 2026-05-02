@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Torre Dinâmica</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Torre Dinâmica</h1>
+    <p>Busca de caminho com A* e Guloso em labirinto com terrenos que mudam ao longo do tempo</p>
+  </header>
+
+  <div class="main-layout">
+
+    <!-- Tabuleiro -->
+    <div class="board-wrap">
+      <div id="board"></div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#3b82f6;box-shadow:0 0 0 2px #93c5fd"></div> Origem</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f97316;box-shadow:0 0 0 2px #fdba74"></div> Destino</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#e2e8f0"></div> Comum (custo 1)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div> Gelo (parede)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#16a34a;outline:2px solid #4ade80;outline-offset:-2px"></div> Caminho ótimo</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#dc2626;outline:2px solid #fca5a5;outline-offset:-2px"></div> Caminho sub-ótimo</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#475569;opacity:0.6"></div> Visitado</div>
+      </div>
+    </div>
+
+    <!-- Painel lateral -->
+    <div class="side-panel">
+
+      <!-- Info do tabuleiro -->
+      <div class="card">
+        <h2>Tabuleiro</h2>
+        <div class="controls">
+          <div class="info-row">Origem  <span id="info-origem">—</span></div>
+          <div class="info-row">Destino <span id="info-destino">—</span></div>
+          <div style="text-align:center">
+            <span class="turno-badge" id="info-turno">Turno <strong>0</strong></span>
+          </div>
+          <div class="btn-row">
+            <button class="btn-neutral" id="btn-novo">Novo Tabuleiro</button>
+            <button class="btn-avancar" id="btn-avancar">Avançar Turno ▶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controles -->
+      <div class="card">
+        <h2>Configuração</h2>
+        <div class="controls">
+          <div>
+            <label for="sel-algo">Algoritmo</label>
+            <select id="sel-algo">
+              <option value="ambos">A* e Guloso</option>
+              <option value="astar">Somente A*</option>
+              <option value="guloso">Somente Guloso</option>
+            </select>
+          </div>
+          <div>
+            <label for="sel-heuristica">Heurística</label>
+            <select id="sel-heuristica">
+              <option value="forte">Forte — Manhattan</option>
+              <option value="fraca">Fraca — h(n) = 0 (Dijkstra)</option>
+            </select>
+          </div>
+          <div>
+            <label for="sel-velocidade">Velocidade da animação</label>
+            <select id="sel-velocidade">
+              <option value="80">Lenta</option>
+              <option value="35" selected>Normal</option>
+              <option value="10">Rápida</option>
+              <option value="0">Instantânea</option>
+            </select>
+          </div>
+          <button class="btn-primary" id="btn-executar">Executar</button>
+        </div>
+      </div>
+
+      <!-- Métricas -->
+      <div class="card">
+        <h2>Resultados</h2>
+        <div class="metrics" id="metricas">
+          <p class="placeholder">Execute um algoritmo para ver os resultados.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="ui/engine.js"></script>
+  <script src="ui/app.js"></script>
+</body>
+</html>
