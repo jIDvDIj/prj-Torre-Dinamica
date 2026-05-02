@@ -20,6 +20,13 @@ class Casa {
   }
 }
 
+function converterParaXadrez(linha, coluna) {
+  const letras = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const numero = 8 - linha;
+
+  return `${letras[coluna]}${numero}`;
+}
+
 
 function criarCaminho(origem, destino) {
   const caminho = [];
@@ -41,7 +48,7 @@ function criarCaminho(origem, destino) {
   return caminho;
 }
 
-function gerarTabuleiroComCaminho() {
+function gerarTabuleiroAleatorio() {
   const matriz = [];
 
   const origem = [rand(), rand()];
@@ -51,28 +58,34 @@ function gerarTabuleiroComCaminho() {
     destino = [rand(), rand()];
   } while (origem[0] === destino[0] && origem[1] === destino[1]);
 
-  const caminho = criarCaminho(origem, destino);
+  for (let i = 0; i < TAM; i++) {
+    const linha = [];
 
-  const caminhoSet = new Set(caminho.map(([x, y]) => `${x}-${y}`));
+    for (let j = 0; j < TAM; j++) {
+      let tipo;
 
-for (let i = 0; i < TAM; i++) {
-  const linha = [];
+      // 🔥 NÃO deixa origem/destino serem barreira
+      if (
+        (i === origem[0] && j === origem[1]) ||
+        (i === destino[0] && j === destino[1])
+      ) {
+        tipo = "estrada";
+      } else {
+        // 🔥 controla chance de barreira
+        const r = Math.random();
 
-  for (let j = 0; j < TAM; j++) {
-    let tipo;
+        if (r < 0.2) tipo = "barreira";     // 20%
+        else if (r < 0.5) tipo = "lama";    // 30%
+        else if (r < 0.8) tipo = "terra";   // 30%
+        else tipo = "estrada";              // 20%
+      }
 
-    if (caminhoSet.has(`${i}-${j}`)) {
-      tipo = "estrada";
-    } else {
-      tipo = TERRENOS[Math.floor(Math.random() * TERRENOS.length)];
+      const custo = CUSTOS[tipo];
+      linha.push(new Casa(i, j, tipo, custo));
     }
 
-    const custo = CUSTOS[tipo];
-    linha.push(new Casa(i, j, tipo, custo));
+    matriz.push(linha);
   }
-
-  matriz.push(linha);
-}
 
   return { matriz, origem, destino };
 }
@@ -132,6 +145,7 @@ function imprimirTabuleiro(tabuleiro, origem, destino) {
 
 
 module.exports = {
-  gerarTabuleiroComCaminho,
-  imprimirTabuleiro
+  gerarTabuleiroAleatorio,
+  imprimirTabuleiro,
+  converterParaXadrez
 };
