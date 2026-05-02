@@ -9,27 +9,23 @@ function getMovimentos(tabuleiro, casa) {
   ];
 
   for (const dir of direcoes) {
-    let i = casa.linha + dir.dx;
-    let j = casa.coluna + dir.dy;
+    const i = casa.linha + dir.dx;
+    const j = casa.coluna + dir.dy;
 
-    // 🔥 continua andando até bater em obstáculo
-    while (
+    // verifica se está dentro do tabuleiro
+    if (
       i >= 0 && i < tabuleiro.length &&
       j >= 0 && j < tabuleiro.length
     ) {
       const proximaCasa = tabuleiro[i][j];
 
-      // para se for barreira
-      if (proximaCasa.tipo === "barreira") break;
-
-      movimentos.push({
-        casa: proximaCasa,
-        direcao: dir.nome
-      });
-
-      // continua na mesma direção
-      i += dir.dx;
-      j += dir.dy;
+      // ignora barreira
+      if (proximaCasa.tipo !== "barreira") {
+        movimentos.push({
+          casa: proximaCasa,
+          direcao: dir.nome
+        });
+      }
     }
   }
 

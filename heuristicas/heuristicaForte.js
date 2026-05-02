@@ -1,12 +1,8 @@
-function heuristicaForte(casaAtual, destino) {
-  const mesmaLinha = casaAtual.linha === destino[0];
-  const mesmaColuna = casaAtual.coluna === destino[1];
+function heuristicaManhattan(casaAtual, destino) {
+  const dx = Math.abs(casaAtual.linha - destino[0]);
+  const dy = Math.abs(casaAtual.coluna - destino[1]);
 
-  if (mesmaLinha || mesmaColuna) {
-    return 1; // chega em 1 movimento
-  }
-
-  return 2; // precisa de 2 movimentos (mínimo da torre)
+  return dx + dy;
 }
 
-module.exports = heuristicaForte;
+module.exports = heuristicaManhattan;
