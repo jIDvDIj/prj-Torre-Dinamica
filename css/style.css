@@ -1,0 +1,340 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: #2e3350;
+  --accent: #5b8df6;
+  --accent2: #e05c5c;
+  --text: #e2e8f0;
+  --text-muted: #7a8299;
+  --comum:    #e2e8f0;
+  --neve:     #bfdbfe;
+  --terra:    #c8a46e;
+  --areia:    #e8d5a0;
+  --lama:     #7ba3b0;
+  --floresta: #4a7c59;
+  --gelo:     #1d4ed8;
+  --radius: 10px;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  gap: 24px;
+}
+
+header {
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.main-layout {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 960px;
+}
+
+/* ── Tabuleiro ── */
+.board-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  background: var(--border);
+  padding: 3px;
+  border-radius: var(--radius);
+}
+
+.cell {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  position: relative;
+  transition: background 0.2s, outline 0.15s, opacity 0.2s;
+  cursor: default;
+}
+
+.cell::after {
+  content: attr(data-custo);
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.55rem;
+  opacity: 0.6;
+  font-weight: 600;
+}
+
+.cell.comum    { background: var(--comum);    color: #334155; }
+.cell.neve     { background: var(--neve);     color: #1e3a5f; }
+.cell.terra    { background: var(--terra);    color: #4a2f0a; }
+.cell.areia    { background: var(--areia);    color: #5a3e10; }
+.cell.lama     { background: var(--lama);     color: #0f2e36; }
+.cell.floresta { background: var(--floresta); color: #d1fae5; }
+.cell.gelo     { background: var(--gelo);     color: #fff; }
+
+.cell.origem  { background: #3b82f6 !important; color: #fff; box-shadow: 0 0 0 3px #93c5fd; }
+.cell.destino { background: #f97316 !important; color: #fff; box-shadow: 0 0 0 3px #fdba74; }
+
+.cell.caminho-otimo {
+  background: #16a34a !important;
+  color: #fff !important;
+  outline: 3px solid #4ade80;
+  outline-offset: -3px;
+  z-index: 1;
+  font-weight: 700;
+}
+
+.cell.caminho-sub {
+  background: #dc2626 !important;
+  color: #fff !important;
+  outline: 3px solid #fca5a5;
+  outline-offset: -3px;
+  z-index: 1;
+  font-weight: 700;
+}
+
+.cell.visitado {
+  background: #94a3b8 !important;
+  color: #fff;
+}
+
+.cell.erro {
+  background: #111827 !important;
+  color: #374151;
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.leg-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* ── Painel lateral ── */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 260px;
+  flex: 1;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.card h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* ── Controles ── */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  display: block;
+}
+
+select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.88rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+button:hover  { opacity: 0.85; }
+button:active { transform: scale(0.97); }
+
+.btn-primary { background: var(--accent);  color: #fff; }
+.btn-danger  { background: var(--accent2); color: #fff; }
+.btn-neutral { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+/* ── Métricas ── */
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border-radius: 6px;
+  border-left: 3px solid var(--border);
+  transition: border-color 0.3s;
+}
+
+.metric-row.active { border-left-color: var(--accent); }
+
+.metric-label { color: var(--text-muted); }
+
+.metric-values {
+  display: flex;
+  gap: 16px;
+}
+
+.metric-val {
+  text-align: right;
+  font-weight: 600;
+}
+
+.metric-val small {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.badge-otimo {
+  font-size: 0.65rem;
+  background: #2a5c2a;
+  color: #7ecf7e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+
+.badge-sub {
+  font-size: 0.65rem;
+  background: #5c2a2a;
+  color: #cf7e7e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+
+.placeholder {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* ── Info do tabuleiro ── */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.83rem;
+  color: var(--text-muted);
+}
+
+.info-row span { color: var(--text); font-weight: 600; }
+
+/* ── Turno ── */
+.turno-badge {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.turno-badge strong {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.btn-avancar {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.gelo-counter {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #0c4a6e;
+}
+
+@media (max-width: 600px) {
+  .cell { width: 40px; height: 40px; font-size: 1rem; }
+}

@@ -1,12 +1,15 @@
 
 const TAM = 8;
 
-const TERRENOS = ["estrada", "terra", "lama", "barreira"];
+const TERRENOS = ["estrada", "neve", "terra", "areia", "lama", "floresta", "barreira"];
 
 const CUSTOS = {
-  estrada: 1,
-  terra: 3,
-  lama: 5,
+  estrada:  1,
+  neve:     2,
+  terra:    3,
+  areia:    4,
+  lama:     5,
+  floresta: 7,
   barreira: Infinity
 };
 
@@ -18,6 +21,13 @@ class Casa {
     this.tipo = tipo;
     this.custo = custo;
   }
+}
+
+function converterParaXadrez(linha, coluna) {
+  const letras = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const numero = 8 - linha;
+
+  return `${letras[coluna]}${numero}`;
 }
 
 
@@ -41,7 +51,7 @@ function criarCaminho(origem, destino) {
   return caminho;
 }
 
-function gerarTabuleiroComCaminho() {
+function gerarTabuleiroAleatorio() {
   const matriz = [];
 
   const origem = [rand(), rand()];
@@ -49,30 +59,39 @@ function gerarTabuleiroComCaminho() {
 
   do {
     destino = [rand(), rand()];
-  } while (origem[0] === destino[0] && origem[1] === destino[1]);
+  } while (Math.abs(origem[0] - destino[0]) + Math.abs(origem[1] - destino[1]) < 4);
 
-  const caminho = criarCaminho(origem, destino);
+  for (let i = 0; i < TAM; i++) {
+    const linha = [];
 
-  const caminhoSet = new Set(caminho.map(([x, y]) => `${x}-${y}`));
+    for (let j = 0; j < TAM; j++) {
+      let tipo;
 
-for (let i = 0; i < TAM; i++) {
-  const linha = [];
+      // 🔥 NÃO deixa origem/destino serem barreira
+      if (
+        (i === origem[0] && j === origem[1]) ||
+        (i === destino[0] && j === destino[1])
+      ) {
+        tipo = "estrada";
+      } else {
+        // 🔥 controla chance de barreira
+        const r = Math.random();
 
-  for (let j = 0; j < TAM; j++) {
-    let tipo;
+        if      (r < 0.15) tipo = "barreira";  // 15%
+        else if (r < 0.30) tipo = "floresta";  // 15%
+        else if (r < 0.45) tipo = "lama";      // 15%
+        else if (r < 0.60) tipo = "areia";     // 15%
+        else if (r < 0.75) tipo = "terra";     // 15%
+        else if (r < 0.88) tipo = "neve";      // 13%
+        else               tipo = "estrada";   // 12%
+      }
 
-    if (caminhoSet.has(`${i}-${j}`)) {
-      tipo = "estrada";
-    } else {
-      tipo = TERRENOS[Math.floor(Math.random() * TERRENOS.length)];
+      const custo = CUSTOS[tipo];
+      linha.push(new Casa(i, j, tipo, custo));
     }
 
-    const custo = CUSTOS[tipo];
-    linha.push(new Casa(i, j, tipo, custo));
+    matriz.push(linha);
   }
-
-  matriz.push(linha);
-}
 
   return { matriz, origem, destino };
 }
@@ -101,18 +120,13 @@ function imprimirTabuleiro(tabuleiro, origem, destino) {
         const tipo = tabuleiro[i][j].tipo;
 
         switch (tipo) {
-          case "estrada":
-            linhaStr += " . ";
-            break;
-          case "terra":
-            linhaStr += " t ";
-            break;
-          case "lama":
-            linhaStr += " m ";
-            break;
-          case "barreira":
-            linhaStr += " X ";
-            break;
+          case "estrada":  linhaStr += " . "; break;
+          case "neve":     linhaStr += " n "; break;
+          case "terra":    linhaStr += " t "; break;
+          case "areia":    linhaStr += " a "; break;
+          case "lama":     linhaStr += " m "; break;
+          case "floresta": linhaStr += " f "; break;
+          case "barreira": linhaStr += " X "; break;
         }
       }
 
@@ -124,14 +138,29 @@ function imprimirTabuleiro(tabuleiro, origem, destino) {
   console.log("\nLegenda:");
   console.log("♜ = origem");
   console.log("🎯 = destino");
-  console.log(". = estrada (1)");
-  console.log("t = terra (3)");
-  console.log("m = lama (5)");
-  console.log("X = barreira\n");
+  console.log(". = estrada  (custo 1)");
+  console.log("n = neve     (custo 2)");
+  console.log("t = terra    (custo 3)");
+  console.log("a = areia    (custo 4)");
+  console.log("m = lama     (custo 5)");
+  console.log("f = floresta (custo 7)");
+  console.log("X = barreira (bloqueio)\n");
 }
 
 
+function gerarTabuleiroComCaminho() {
+  const { matriz, origem, destino } = gerarTabuleiroAleatorio();
+  const caminho = criarCaminho(origem, destino);
+  for (const [i, j] of caminho) {
+    matriz[i][j].tipo = "estrada";
+    matriz[i][j].custo = CUSTOS["estrada"];
+  }
+  return { matriz, origem, destino };
+}
+
 module.exports = {
+  gerarTabuleiroAleatorio,
   gerarTabuleiroComCaminho,
-  imprimirTabuleiro
+  imprimirTabuleiro,
+  converterParaXadrez
 };

@@ -1,29 +1,35 @@
-function getMovimentos(tabuleiro, casaAtual) {
+function getMovimentos(tabuleiro, casa) {
   const movimentos = [];
 
   const direcoes = [
-    { nome: "cima", di: -1, dj: 0 },
-    { nome: "baixo", di: 1, dj: 0 },
-    { nome: "esquerda", di: 0, dj: -1 },
-    { nome: "direita", di: 0, dj: 1 }
+    { dx: -1, dy: 0, nome: "cima" },
+    { dx: 1, dy: 0, nome: "baixo" },
+    { dx: 0, dy: -1, nome: "esquerda" },
+    { dx: 0, dy: 1, nome: "direita" }
   ];
 
   for (const dir of direcoes) {
-    const novaLinha = casaAtual.linha + dir.di;
-    const novaColuna = casaAtual.coluna + dir.dj;
+    let i = casa.linha + dir.dx;
+    let j = casa.coluna + dir.dy;
 
-    if (
-      novaLinha >= 0 && novaLinha < tabuleiro.length &&
-      novaColuna >= 0 && novaColuna < tabuleiro[0].length
+    // 🔥 continua andando até bater em obstáculo
+    while (
+      i >= 0 && i < tabuleiro.length &&
+      j >= 0 && j < tabuleiro.length
     ) {
-      const vizinho = tabuleiro[novaLinha][novaColuna];
+      const proximaCasa = tabuleiro[i][j];
 
-      if (vizinho.custo !== Infinity) {
-        movimentos.push({
-          casa: vizinho,
-          direcao: dir.nome
-        });
-      }
+      // para se for barreira
+      if (proximaCasa.tipo === "barreira") break;
+
+      movimentos.push({
+        casa: proximaCasa,
+        direcao: dir.nome
+      });
+
+      // continua na mesma direção
+      i += dir.dx;
+      j += dir.dy;
     }
   }
 
