@@ -2,16 +2,24 @@
 
 const TAM = 8;
 const CUSTOS = {
-  comum: 1,
-  gelo:  Infinity,
+  comum:    1,
+  neve:     2,
+  terra:    3,
+  areia:    4,
+  lama:     5,
+  floresta: 7,
+  gelo:     Infinity,
 };
+
+const TIPOS_BASE = ["comum", "neve", "terra", "areia", "lama", "floresta"];
 
 class Casa {
   constructor(linha, coluna, tipo) {
-    this.linha  = linha;
-    this.coluna = coluna;
-    this.tipo   = tipo;
-    this.custo  = CUSTOS[tipo];
+    this.linha    = linha;
+    this.coluna   = coluna;
+    this.tipo     = tipo;
+    this.tipoBase = tipo;
+    this.custo    = CUSTOS[tipo];
   }
 }
 
@@ -19,23 +27,36 @@ function rand() {
   return Math.floor(Math.random() * TAM);
 }
 
+function sortearTerrenoBase() {
+  const r = Math.random();
+  if      (r < 0.20) return "comum";
+  else if (r < 0.35) return "neve";
+  else if (r < 0.52) return "terra";
+  else if (r < 0.67) return "areia";
+  else if (r < 0.83) return "lama";
+  else               return "floresta";
+}
+
 function gerarTabuleiro() {
   const origem = [rand(), rand()];
   let destino;
   do { destino = [rand(), rand()]; }
-  while (origem[0] === destino[0] && origem[1] === destino[1]);
+  while (Math.abs(origem[0] - destino[0]) + Math.abs(origem[1] - destino[1]) < 4);
 
   const protegidas = new Set([
     `${origem[0]}-${origem[1]}`,
     `${destino[0]}-${destino[1]}`,
   ]);
 
-  // Todas as células começam como comum
   const matriz = [];
   for (let i = 0; i < TAM; i++) {
     const linha = [];
-    for (let j = 0; j < TAM; j++)
-      linha.push(new Casa(i, j, "comum"));
+    for (let j = 0; j < TAM; j++) {
+      const isProtegida = (i === origem[0] && j === origem[1]) ||
+                          (i === destino[0] && j === destino[1]);
+      const tipo = isProtegida ? "comum" : sortearTerrenoBase();
+      linha.push(new Casa(i, j, tipo));
+    }
     matriz.push(linha);
   }
 
@@ -60,13 +81,13 @@ function evoluirTabuleiro(matriz, origem, destino, ultimoCaminho = []) {
 
 function adicionarGelo(matriz, protegidas, caminho, quantidade, origem, destino) {
   const gelarSeguro = (casa) => {
-    // Testa o bloqueio antes de confirmar
+    const tipoAnterior  = casa.tipo;
+    const custoAnterior = casa.custo;
     casa.tipo  = "gelo";
     casa.custo = Infinity;
     if (!existeCaminho(matriz, origem, destino)) {
-      // Reverte — essa célula não pode ser bloqueada
-      casa.tipo  = "comum";
-      casa.custo = CUSTOS.comum;
+      casa.tipo  = tipoAnterior;
+      casa.custo = custoAnterior;
       return false;
     }
     return true;

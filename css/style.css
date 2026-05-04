@@ -9,8 +9,13 @@
   --accent2: #e05c5c;
   --text: #e2e8f0;
   --text-muted: #7a8299;
-  --comum: #e2e8f0;
-  --gelo:  #3b82f6;
+  --comum:    #e2e8f0;
+  --neve:     #bfdbfe;
+  --terra:    #c8a46e;
+  --areia:    #e8d5a0;
+  --lama:     #7ba3b0;
+  --floresta: #4a7c59;
+  --gelo:     #1d4ed8;
   --radius: 10px;
 }
 
@@ -91,8 +96,13 @@ header p {
   font-weight: 600;
 }
 
-.cell.comum { background: var(--comum); color: #334155; }
-.cell.gelo  { background: var(--gelo);  color: #fff; }
+.cell.comum    { background: var(--comum);    color: #334155; }
+.cell.neve     { background: var(--neve);     color: #1e3a5f; }
+.cell.terra    { background: var(--terra);    color: #4a2f0a; }
+.cell.areia    { background: var(--areia);    color: #5a3e10; }
+.cell.lama     { background: var(--lama);     color: #0f2e36; }
+.cell.floresta { background: var(--floresta); color: #d1fae5; }
+.cell.gelo     { background: var(--gelo);     color: #fff; }
 
 .cell.origem  { background: #3b82f6 !important; color: #fff; box-shadow: 0 0 0 3px #93c5fd; }
 .cell.destino { background: #f97316 !important; color: #fff; box-shadow: 0 0 0 3px #fdba74; }
