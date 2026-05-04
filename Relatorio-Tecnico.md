@@ -107,57 +107,30 @@ A divisão por 10 faz a heurística **subestimar drasticamente** o custo real. C
 
 ## 4. Resultados Comparativos
 
-Os testes foram executados em **20 rodadas** com tabuleiros gerados aleatoriamente (distância mínima de 4 entre origem e destino). O custo de referência em cada rodada foi definido como o resultado do A\* com H.Forte.
+Os testes foram executados em **50.000 rodadas** com tabuleiros gerados aleatoriamente (distância mínima de 4 entre origem e destino). O custo de referência em cada rodada foi definido como o resultado do A\* com H.Forte.
 
-### 4.1 Médias sobre 20 rodadas
+### 4.1 Médias sobre 50.000 rodadas
 
 | Combinação          | Nós expandidos (méd) | Custo (méd) | Tempo (ms, méd) | Caminho ótimo |
 |---------------------|---------------------:|------------:|----------------:|:-------------:|
-| A\* + H.Forte       |                  8,1 |         6,5 |           0,060 | **100%**      |
-| A\* + H.Fraca       |                 13,6 |         6,5 |           0,085 | **100%**      |
-| Guloso + H.Forte    |                  7,5 |        13,6 |           0,072 | 40%           |
-| Guloso + H.Fraca    |                  7,5 |         6,5 |           0,043 | **100%**      |
+| A\* + H.Forte       |                 8,21 |        6,44 |          0,0110 | **100,00%**   |
+| A\* + H.Fraca       |                13,63 |        6,44 |          0,0165 | **100,00%**   |
+| Guloso + H.Forte    |                 7,49 |       13,21 |          0,0103 | 33,60%        |
+| Guloso + H.Fraca    |                 7,44 |        6,44 |          0,0096 | **100,00%**   |
 
-### 4.2 Resultados por rodada
-
-| Rod | Custo ótimo | A\*+Forte | nós | A\*+Fraca | nós | Gul+Forte | nós | Gul+Fraca | nós |
-|-----|:-----------:|:---------:|:---:|:---------:|:---:|:---------:|:---:|:---------:|:---:|
-|  1  |      6      |    6 ✓    |  7  |    6 ✓    |  9  |    6 ✓    |  7  |    6 ✓    |  7  |
-|  2  |      5      |    5 ✓    |  7  |    5 ✓    |  9  |   12 ✗    |  6  |    5 ✓    |  6  |
-|  3  |     10      |   10 ✓    | 13  |   10 ✓    | 25  |   27 ✗    | 11  |   10 ✓    | 11  |
-|  4  |      6      |    6 ✓    |  7  |    6 ✓    | 11  |   14 ✗    |  7  |    6 ✓    |  7  |
-|  5  |      6      |    6 ✓    |  7  |    6 ✓    | 12  |    6 ✓    |  7  |    6 ✓    |  7  |
-|  6  |      5      |    5 ✓    |  8  |    5 ✓    | 15  |    5 ✓    |  6  |    5 ✓    |  6  |
-|  7  |      7      |    7 ✓    |  8  |    7 ✓    | 13  |   18 ✗    |  8  |    7 ✓    |  8  |
-|  8  |      5      |    5 ✓    |  6  |    5 ✓    |  8  |   13 ✗    |  6  |    5 ✓    |  6  |
-|  9  |      5      |    5 ✓    |  6  |    5 ✓    | 10  |    5 ✓    |  6  |    5 ✓    |  6  |
-| 10  |      4      |    4 ✓    |  5  |    4 ✓    |  6  |    4 ✓    |  5  |    4 ✓    |  5  |
-| 11  |      6      |    6 ✓    |  8  |    6 ✓    | 17  |   18 ✗    |  7  |    6 ✓    |  7  |
-| 12  |      9      |    9 ✓    | 12  |    9 ✓    | 21  |   24 ✗    | 10  |    9 ✓    | 10  |
-| 13  |      5      |    5 ✓    |  6  |    5 ✓    | 10  |    5 ✓    |  6  |    5 ✓    |  6  |
-| 14  |      5      |    5 ✓    |  6  |    5 ✓    |  8  |    9 ✗    |  6  |    5 ✓    |  6  |
-| 15  |      5      |    5 ✓    |  7  |    5 ✓    | 11  |    5 ✓    |  6  |    5 ✓    |  6  |
-| 16  |      9      |    9 ✓    | 10  |    9 ✓    | 22  |   20 ✗    | 10  |    9 ✓    | 10  |
-| 17  |      9      |    9 ✓    | 12  |    9 ✓    | 20  |   21 ✗    | 10  |    9 ✓    | 10  |
-| 18  |      4      |    4 ✓    |  5  |    4 ✓    |  7  |    4 ✓    |  5  |    4 ✓    |  5  |
-| 19  |      8      |    8 ✓    |  9  |    8 ✓    | 13  |   27 ✗    |  9  |    8 ✓    |  9  |
-| 20  |     10      |   10 ✓    | 12  |   10 ✓    | 24  |   29 ✗    | 11  |   10 ✓    | 11  |
-
-*(✓ = caminho ótimo encontrado, ✗ = custo superior ao ótimo)*
-
-### 4.3 Análise dos resultados
+### 4.2 Análise dos resultados
 
 **Impacto da heurística no A\*:**  
-O A\* com H.Forte expandiu em média **8,1 nós** contra **13,6 nós** do A\* com H.Fraca — uma redução de **40%**. Ambas encontraram o caminho ótimo em 100% das rodadas. A maior variedade de custos de terreno (1 a 7) amplificou essa diferença em relação a tabuleiros mais simples: a H.Forte direciona melhor a busca justamente porque os custos mais altos tornam os atalhos geométricos mais valiosos de identificar cedo.
+O A\* com H.Forte expandiu em média **8,21 nós** contra **13,63 nós** do A\* com H.Fraca — uma redução de **39,8%**, consolidada sobre 50.000 amostras. Ambas encontraram o caminho ótimo em **100% das rodadas**. A variedade de custos de terreno (1 a 7) amplifica esse efeito: a H.Forte descarta mais cedo os nós que levam a terrenos caros.
 
 **Impacto da heurística no Guloso:**  
-O Guloso com H.Forte acertou o caminho ótimo em apenas **40% das rodadas**, com custo médio de 13,6 — **109% acima do ótimo**. Esse é o pior resultado observado: a presença de floresta (custo 7) e areia (custo 4) cria armadilhas onde o Guloso avança na direção correta geometricamente, mas acumula custo alto por ignorar `g(n)`. O Guloso com H.Fraca acertou **100% das rodadas**, pelo mesmo motivo dos experimentos anteriores: a estimativa quase-zero força exploração mais completa.
+O Guloso com H.Forte acertou o caminho ótimo em apenas **33,60% das rodadas**, com custo médio de 13,21 — **105% acima do ótimo**. A presença de floresta (custo 7) e areia (custo 4) cria frequentes armadilhas onde o Guloso avança na direção geométrica correta, mas atravessa terrenos caros por ignorar `g(n)`. O Guloso com H.Fraca acertou **100% das rodadas**: a estimativa quase-zero o força a explorar de forma mais uniforme, comportando-se próximo a uma busca de custo uniforme.
 
 **Impacto da distância mínima:**  
-Com a restrição de distância mínima de 4, os caminhos ficaram mais longos e os terrenos intermediários passaram a ter maior influência no custo total. Isso torna os erros do Guloso+H.Forte mais expressivos (custo médio dobrou em relação à versão anterior) e amplia o benefício da H.Forte no A\*.
+Com a restrição de distância ≥ 4, os caminhos envolvem mais células intermediárias, aumentando a influência do tipo de terreno no custo total. Isso agrava os erros do Guloso+H.Forte (custo médio mais que o dobro do ótimo) e reforça o benefício da H.Forte no A\*.
 
 **Eficiência computacional:**  
-Todos os tempos ficaram abaixo de 0,09 ms. Para um tabuleiro 8×8, as diferenças de tempo não são significativas; o indicador relevante de eficiência é o número de nós expandidos.
+Todos os tempos médios ficaram abaixo de 0,035 ms. Para o tabuleiro 8×8, a diferença de tempo entre algoritmos é desprezível; o indicador relevante de eficiência é o número de nós expandidos.
 
 ---
 
@@ -176,4 +149,4 @@ Em síntese:
 | Garantia de otimalidade   | A\* (qualquer h)         |
 | Menor esforço de busca    | Guloso + H.Forte         |
 | Melhor equilíbrio geral   | **A\* + H.Forte**        |
-| Pior caso observado       | Guloso + H.Forte (40%)   |
+| Pior caso observado       | Guloso + H.Forte (33,6%) |

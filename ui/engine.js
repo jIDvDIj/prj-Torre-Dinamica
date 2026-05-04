@@ -74,7 +74,7 @@ function evoluirTabuleiro(matriz, origem, destino, ultimoCaminho = []) {
     `${destino[0]}-${destino[1]}`,
   ]);
 
-  adicionarGelo(matriz, protegidas, ultimoCaminho, 5, origem, destino);
+  adicionarGelo(matriz, protegidas, ultimoCaminho, 8, origem, destino);
 
   return existeCaminho(matriz, origem, destino);
 }
@@ -93,15 +93,23 @@ function adicionarGelo(matriz, protegidas, caminho, quantidade, origem, destino)
     return true;
   };
 
-  // Candidatos do caminho anterior que ainda são comuns
+  // Candidatos do caminho anterior que ainda não são gelo
   const doCaminho = caminho.filter(([l, c]) =>
-    !protegidas.has(`${l}-${c}`) && matriz[l][c].tipo === "comum"
+    !protegidas.has(`${l}-${c}`) && matriz[l][c].tipo !== "gelo"
   );
 
   let restantes = quantidade;
 
-  // Tenta colocar 1 no caminho anterior
-  if (doCaminho.length > 0) {
+  // Bloqueia o máximo possível do caminho atual (até metade da quantidade)
+  const limiteCaminho = Math.ceil(quantidade / 2);
+  let bloqueadosCaminho = 0;
+  for (const [l, c] of doCaminho) {
+    if (bloqueadosCaminho >= limiteCaminho) break;
+    if (gelarSeguro(matriz[l][c])) { restantes--; bloqueadosCaminho++; }
+  }
+
+  // Garante ao menos 1 bloqueio no caminho se não conseguiu nenhum
+  if (bloqueadosCaminho === 0 && doCaminho.length > 0) {
     embaralhar(doCaminho);
     for (const [l, c] of doCaminho) {
       if (gelarSeguro(matriz[l][c])) { restantes--; break; }
@@ -112,7 +120,7 @@ function adicionarGelo(matriz, protegidas, caminho, quantidade, origem, destino)
   const livres = [];
   for (let i = 0; i < TAM; i++)
     for (let j = 0; j < TAM; j++)
-      if (!protegidas.has(`${i}-${j}`) && matriz[i][j].tipo === "comum")
+      if (!protegidas.has(`${i}-${j}`) && matriz[i][j].tipo !== "gelo")
         livres.push(matriz[i][j]);
 
   embaralhar(livres);
